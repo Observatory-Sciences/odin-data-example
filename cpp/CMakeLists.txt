@@ -52,6 +52,8 @@ include_directories(${CMAKE_BINARY_DIR}/include)
 # Add common/include directory to include path
 include_directories(${COMMON_DIR}/include)
 
+# Add the cmake subdirectory so that CMake finders are installed
+add_subdirectory(cmake)
 
 # Add the frameReceiver subdirectory
 add_subdirectory(${FRAMERECEIVER_DIR})
@@ -66,5 +68,6 @@ add_subdirectory(${FRAMEPROCESSOR_DIR})
 #add_subdirectory(doc)
 
 # Add the config subdirectory (config files used for integration testing)
-#add_subdirectory(config)
+add_subdirectory(config)
 
+add_subdirectory(static)

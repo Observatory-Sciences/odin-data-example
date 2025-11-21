@@ -7,10 +7,10 @@
 
 #include "ExampleDetectorPlugin.h"
 #include "DebugLevelLogger.h"
-#include "version.h"
 
-// Timeout for IDLE packets after which we assume we are in an acquisition
-#define IDLE_PACKET_TIMEOUT_MS 1500
+
+#define IMAGE_WIDTH 256
+#define IMAGE_HEIGHT 256
 
 namespace FrameProcessor
 {
@@ -23,7 +23,6 @@ ExampleDetectorPlugin::ExampleDetectorPlugin()
 
 ExampleDetectorPlugin::~ExampleDetectorPlugin()
 {
-	// TODO Auto-generated destructor stub
 }
 
 /**
@@ -43,7 +42,6 @@ void ExampleDetectorPlugin::configure(OdinData::IpcMessage& config, OdinData::Ip
 
 void ExampleDetectorPlugin::requestConfiguration(OdinData::IpcMessage& reply)
 {
-//  reply.set_param(get_name() + "/" + LATRDProcessPlugin::CONFIG_MODE, this->mode_);
 }
 
 void ExampleDetectorPlugin::status(OdinData::IpcMessage& status)
@@ -54,6 +52,37 @@ void ExampleDetectorPlugin::status(OdinData::IpcMessage& status)
 
 void ExampleDetectorPlugin::process_frame(boost::shared_ptr<Frame> frame)
 {
+  // Extract the frame header from the frame
+  ExampleDetector::FrameHeader* hdr_ptr = static_cast<ExampleDetector::FrameHeader*>(frame->get_data_ptr());
+  // Log details of the frame
+  LOG4CXX_TRACE(logger_, "Received a new frame with number: << " << hdr_ptr->frame_number);
+  LOG4CXX_DEBUG(logger_, "Frame state: " << hdr_ptr->frame_state);
+  LOG4CXX_DEBUG(logger_, "Packets received: " << hdr_ptr->packets_received << " expected: " << ExampleDetector::num_packets);
+
+  // Create and populate metadata for the output frame
+  FrameMetaData frame_meta;
+  frame_meta.set_dataset_name("example");
+  frame_meta.set_data_type(raw_8bit);
+  frame_meta.set_frame_number(static_cast<long long>(hdr_ptr->frame_number));
+  dimensions_t dims(2);
+  dims[0] = IMAGE_HEIGHT;
+  dims[1] = IMAGE_WIDTH;
+  frame_meta.set_dimensions(dims);
+  frame_meta.set_compression_type(no_compression);
+  // Set metadata on existing frame
+  frame->set_meta_data(frame_meta);
+
+  // Calculate output image size
+  const std::size_t output_image_size = IMAGE_WIDTH * IMAGE_HEIGHT * sizeof(uint8_t);
+
+  // Set output image size on existing frame
+  frame->set_image_size(output_image_size);
+
+  // Set iamge offset on exisitng frame
+  frame->set_image_offset(sizeof(ExampleDetector::FrameHeader));
+
+  // Push the frame to the next plugin
+  this->push(frame);
 }
 
 /**
@@ -61,9 +90,9 @@ void ExampleDetectorPlugin::process_frame(boost::shared_ptr<Frame> frame)
   *
   * \return major version number as an integer
   */
-int LATRDProcessPlugin::get_version_major()
+int ExampleDetectorPlugin::get_version_major()
 {
-  return ODIN_DATA_VERSION_MAJOR;
+  return 0;
 }
 
 /**
@@ -71,9 +100,9 @@ int LATRDProcessPlugin::get_version_major()
   *
   * \return minor version number as an integer
   */
-int LATRDProcessPlugin::get_version_minor()
+int ExampleDetectorPlugin::get_version_minor()
 {
-  return ODIN_DATA_VERSION_MINOR;
+  return 0;
 }
 
 /**
@@ -81,9 +110,9 @@ int LATRDProcessPlugin::get_version_minor()
   *
   * \return patch version number as an integer
   */
-int LATRDProcessPlugin::get_version_patch()
+int ExampleDetectorPlugin::get_version_patch()
 {
-  return ODIN_DATA_VERSION_PATCH;
+  return 0;
 }
 
 /**
@@ -91,9 +120,9 @@ int LATRDProcessPlugin::get_version_patch()
   *
   * \return short version as a string
   */
-std::string LATRDProcessPlugin::get_version_short()
+std::string ExampleDetectorPlugin::get_version_short()
 {
-  return ODIN_DATA_VERSION_STR_SHORT;
+  return "0.0.0";
 }
 
 /**
@@ -101,9 +130,9 @@ std::string LATRDProcessPlugin::get_version_short()
   *
   * \return long version as a string
   */
-std::string LATRDProcessPlugin::get_version_long()
+std::string ExampleDetectorPlugin::get_version_long()
 {
-  return ODIN_DATA_VERSION_STR;
+  return "0.0.0";
 }
 
 } /* namespace FrameProcesser */

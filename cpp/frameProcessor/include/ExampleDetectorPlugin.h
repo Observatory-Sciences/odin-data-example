@@ -17,6 +17,7 @@ using namespace log4cxx;
 using namespace log4cxx::helpers;
 
 #include <stack>
+#include "ExampleDetectorDefinitions.h"
 #include "FrameProcessorPlugin.h"
 #include "ClassLoader.h"
 
@@ -34,22 +35,13 @@ namespace FrameProcessor {
 
         void status(OdinData::IpcMessage& status);
 
-        void configureProcess(OdinData::IpcMessage &config, OdinData::IpcMessage &reply);
-
-        void configureSensor(OdinData::IpcMessage &config, OdinData::IpcMessage &reply);
-
-        void configureFrameSize(OdinData::IpcMessage &config, OdinData::IpcMessage &reply);
-
-        void createMetaHeader();
-
-        bool reset_statistics(void);
+        void process_frame(boost::shared_ptr<Frame> frame);
 
         int get_version_major();
         int get_version_minor();
         int get_version_patch();
         std::string get_version_short();
         std::string get_version_long();
-        unsigned int elapsed_ms(struct timespec& start, struct timespec& end);
 
     private:
 

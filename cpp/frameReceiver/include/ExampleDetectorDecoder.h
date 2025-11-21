@@ -8,8 +8,8 @@
 #ifndef SRC_LATRDFRAMEDECODER_H_
 #define SRC_LATRDFRAMEDECODER_H_
 
+#include "ExampleDetectorDefinitions.h"
 #include "FrameDecoderUDP.h"
-#include "LATRDDefinitions.h"
 #include "gettime.h"
 #include <stdint.h>
 #include <time.h>
@@ -23,11 +23,11 @@
 namespace FrameReceiver
 {
 
-class LATRDFrameDecoder : public FrameDecoderUDP
+class ExampleDetectorDecoder : public FrameDecoderUDP
 {
 public:
-	LATRDFrameDecoder();
-	virtual ~LATRDFrameDecoder();
+	ExampleDetectorDecoder();
+	virtual ~ExampleDetectorDecoder();
 	void init(LoggerPtr& logger, OdinData::IpcMessage& config_msg);
 	void log_packet(size_t bytes_received, int port, struct sockaddr_in* from_addr);
     const size_t get_frame_buffer_size(void) const;
@@ -54,16 +54,8 @@ public:
     std::string get_version_short();
     std::string get_version_long();
 
-///    uint32_t get_frame_number(void) const;
-//    uint32_t get_packet_number(void) const;
-//    uint32_t get_frame_packet_number(void) const;
-//    uint8_t get_producer_ID(void) const;
-//    uint32_t get_time_slice(void) const;
-//    uint16_t get_word_count(void) const;
-
 private:
 
-    uint8_t* raw_packet_header(void) const;
     unsigned int elapsed_ms(struct timespec& start, struct timespec& end);
 
     boost::shared_ptr<void> current_raw_packet_header_;
@@ -76,8 +68,8 @@ private:
     uint32_t current_frame_seen_;
     int current_frame_buffer_id_;
     void* current_frame_buffer_;
-    LATRD::PacketHeader current_packet_header_;
-    LATRD::FrameHeader* current_frame_header_;
+    ExampleDetector::FrameHeader* current_frame_header_;
+    ExampleDetector::PacketHeader* current_packet_header_;
 
     bool dropping_frame_data_;
 

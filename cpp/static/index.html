@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Example Detector</title>
+
+    <!-- Bootstrap -->
+    <link href="js/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+
+  </head>
+  <body style="padding-top: 30px;">
+  
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+			<a class="navbar-brand" rel="home" href="" title="Odin-Data">
+	        <img style="max-width:40px; margin-top: -7px;" src="/img/odin_logo.png">
+		    </a>
+          <div class="navbar-brand">Example Detector</div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="home"><a href="#/home-view"> <span
+                        class="glyphicon glyphicon-home"></span> <strong>Home</strong><span
+                        class="label"></span></a></li>
+
+                <li class="home"><a href="#/engineering-view"> <span
+                        class="glyphicon glyphicon-home"></span> <strong>Engineering</strong><span
+                        class="label"></span></a></li>
+
+							</ul>
+        </div>
+      </div>
+    </nav>
+
+<!-- HOME PAGE -->
+	<div class="container-fluid home-view page">
+		<div class="row fluid-row">		
+			<div class="span3">
+				<div class="well sidebar-nav-fixed">
+					<div class="container-fluid">
+						<div class="row sidebar-title">
+							<h3>Server Status</h3>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">API Version:</div>
+							<div id="api-version" class="col-xs-5 m-5 status vertical-align">&nbsp;</div>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">&nbsp;</div>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">Adapters Loaded:</div>
+							<div id="api-adapters" class="col-xs-5 status vertical-align">&nbsp;</div>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">&nbsp;</div>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">Detector Connection:</div>
+							<div class="col-xs-5 status vertical-align">
+								<table>
+									<tr><td width="180px">Username:</td><td width="100px" align="center" id="detector-hw-username"></td></tr>
+									<tr><td>Start Time:</td><td align="center" id="detector-hw-start-time"></td></tr>
+									<tr><td>Up Time:</td><td align="center" id="detector-hw-up-time"></td></tr>
+									<tr><td>Exposure:</td><td align="center" id="get-exposure"></td><td><span><input type="text" id="set-exposure"></input></span></td></tr>
+									<tr><td>Frames:</td><td align="center" id="get-frames"></td><td><span><input type="text" id="set-frames"></input></span></td></tr>
+									<tr><td>Command:</td><td align="center" id="detector-hw-state"></td><td>
+										<span><button id="start-cmd">Start</button></span>
+										<span><button id="stop-cmd">Stop</button></span>
+									</td></tr>
+									<tr><td>Acquiring:</td><td align="center" id="status-acquiring"></td></tr>
+									<tr><td>Frames acquired:</td><td align="center" id="status-frames"></td></tr>
+								</table>
+							</div>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">&nbsp;</div>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">Frame Receiver:</div>
+							<div class="col-xs-5" id="tristan-daq-container"></div>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">&nbsp;</div>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">Frame Processor:</div>
+							<div class="col-xs-5 status vertical-align">
+								<table>
+									<tr><td width="180px">Connected:</td><td width="100px" align="center" id="fp-status-connected"></td></tr>
+									<tr><td>Frames to save:</td><td align="center" id="fp-get-frames"></td><td><span><input type="text" id="fp-set-frames"></input></span></td></tr>
+									<tr><td>File path:</td><td align="center" id="fp-get-path"></td><td><span><input type="text" id="fp-set-path"></input></span></td></tr>
+									<tr><td>File prefix:</td><td align="center" id="fp-get-prefix"></td><td><span><input type="text" id="fp-set-prefix"></input></span></td></tr>
+									<tr><td>File extension:</td><td align="center" id="fp-get-ext"></td><td><span><input type="text" id="fp-set-ext"></input></span></td></tr>
+									<tr><td>Command:</td><td align="center" id="fp-state"></td><td>
+										<span><button id="fp-start-cmd">Start Writing</button></span>
+										<span><button id="fp-stop-cmd">Stop Writing</button></span>
+									</td></tr>
+									<tr><td>Writing:</td><td align="center" id="fp-status-writing"></td></tr>
+									<tr><td>Filename:</td><td align="center" id="fp-status-file"></td></tr>
+									<tr><td>Frames Written:</td><td align="center" id="fp-status-frames"></td></tr>
+								</table>
+							</div>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">&nbsp;</div>
+						</div>
+					</div> <!-- container-fluid -->
+				</div> <!--  well sidebar-nav-fixed -->
+			</div> <!-- span3 -->
+		</div> <!-- row fluid-row -->	
+	</div> <!--  container-fluid -->
+<!-- HOME PAGE -->
+	<div class="container-fluid engineering-view page">
+		<div class="row fluid-row">
+			<div class="span3">
+				<div class="well sidebar-nav-fixed">
+					<div class="container-fluid">
+						<div class="row sidebar-title">
+							<h3>Engineering Command</h3>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">&nbsp;</div>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">Detector Command:</div>
+							<div class="col-xs-5 status vertical-align">
+								<textarea rows="15" cols="80" id="engineering-cmd"></textarea>
+								<span><button id="detector-config-put-cmd">Submit PUT</button></span>
+								<span><button id="detector-config-get-cmd">Submit GET</button></span>
+							</div>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">&nbsp;</div>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">Detector Response:</div>
+							<div class="col-xs-5 status vertical-align">
+								<textarea readonly rows="15" cols="80" id="engineering-rsp"></textarea>
+							</div>
+						</div>
+						<div class="row sidebar-row vertical-align">
+							<div class="col-xs-2">&nbsp;</div>
+						</div>
+					</div> <!-- container-fluid -->
+				</div> <!--  well sidebar-nav-fixed -->
+			</div> <!-- span3 -->
+		</div> <!-- row fluid-row -->
+	</div> <!--  container-fluid -->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-3.2.1.min.js" type="text/javascript"></script>
+    <script src="js/jquery-ui.min.js" type="text/javascript"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap-3.3.7-dist/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="js/odin-data.js" type="text/javascript"></script>
+
+</body>
+</html>
+

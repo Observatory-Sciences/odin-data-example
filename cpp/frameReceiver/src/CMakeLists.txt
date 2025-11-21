@@ -4,7 +4,7 @@ set(CMAKE_BUILD_TYPE Debug)
 include_directories(${COMMON_DIR}/include ${FRAMERECEIVER_DIR}/include ${ODINDATA_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${LOG4CXX_INCLUDE_DIRS}/.. ${ZEROMQ_INCLUDE_DIRS})
 
 # Add library for LATRD decoder
-add_library(ExampleDetectorDecoder SHARED ExampleDetectorDecoder.cpp ExampleDetectorDecoderLib.cpp)
+add_library(ExampleDetectorFrameDecoder SHARED ExampleDetectorDecoder.cpp ExampleDetectorDecoderLib.cpp)
 
 #string(TIMESTAMP EXEC_TIME)
 #set(LATRD_EXEC_SCRIPT ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/execute_latrd_receiver)
@@ -23,4 +23,4 @@ add_library(ExampleDetectorDecoder SHARED ExampleDetectorDecoder.cpp ExampleDete
 #	DESTINATION bin
 #	)
 
-install(TARGETS ExampleDetectorDecoder LIBRARY DESTINATION lib)
+install(TARGETS ExampleDetectorFrameDecoder LIBRARY DESTINATION lib)
