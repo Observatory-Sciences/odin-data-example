@@ -750,5 +750,5 @@ odin_control --config=./example-detector.cfg
 2. Open a browser.
 3. Navigate to `127.0.0.1:8888`
 
-![Web UI](images/web_ui.jpg)
+![Web UI](images/web_ui.png)
 
