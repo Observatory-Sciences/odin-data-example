@@ -1,8 +1,8 @@
-# Project name
-project(ExampleDetector)
-
 # Require CMake version >=2.8
 cmake_minimum_required(VERSION 2.8)
+
+# Project name
+project(ExampleDetector)
 
 # Set output directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
