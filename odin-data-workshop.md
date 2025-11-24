@@ -1,6 +1,6 @@
 # ODIN data workshop
 ## 26 November 2026
-(borrowed from https://github.com/stfc-aeg/odin-workshop/blob/master/odin-data.md)
+(inspired by https://github.com/stfc-aeg/odin-workshop/blob/master/odin-data.md)
 
 # Table of Contents
 
@@ -9,15 +9,13 @@
   * Frame Processor
   * Shared Buffers
   * External Software Dependencies
-* Demo using odin-data-example
-  * Building odin-data and plugins
-  * Create development environment
-  * Clone, build and install odin-data
-  * Clone, build and install project-specific plugins
-  * Install Project-specific Frame Processor Configuration
-  * Edit Frame Receiver Configuration
-  * Install Excalibur Packet Capture File
-* Further discussion topics
+* Building odin-data and odin-data-example applications and libraries
+  * C++ Build
+  * Python Build
+  * Running up the FR and FP application pair
+  * Running up the control server
+  * Interacting with the applications using a Web browser
+* Next steps
 
 ## odin-data
 
@@ -752,3 +750,9 @@ odin_control --config=./example-detector.cfg
 
 ![Web UI](images/web_ui.png)
 
+## Next Steps
+
+* Acquire some frames from the simulated adapter "detector".
+* Set the frame processor to save the frames to a file.
+* Open the file using the HDFView application (or equivalent).
+* Try adjusting the debugging log level for the various applications.
