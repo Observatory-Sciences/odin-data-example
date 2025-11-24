@@ -1,6 +1,6 @@
 # ODIN data workshop
 ## 26 November 2026
-(borrowed from https://github.com/stfc-aeg/odin-workshop/blob/master/odin-data.md)
+(inspired by https://github.com/stfc-aeg/odin-workshop/blob/master/odin-data.md)
 
 # Table of Contents
 
@@ -9,15 +9,13 @@
   * Frame Processor
   * Shared Buffers
   * External Software Dependencies
-* Demo using odin-data-example
-  * Building odin-data and plugins
-  * Create development environment
-  * Clone, build and install odin-data
-  * Clone, build and install project-specific plugins
-  * Install Project-specific Frame Processor Configuration
-  * Edit Frame Receiver Configuration
-  * Install Excalibur Packet Capture File
-* Further discussion topics
+* Building odin-data and odin-data-example applications and libraries
+  * C++ Build
+  * Python Build
+  * Running up the FR and FP application pair
+  * Running up the control server
+  * Interacting with the applications using a Web browser
+* Next steps
 
 ## odin-data
 
@@ -302,9 +300,9 @@ Install the project...
 ```
 cd ~/example/odin-data-example/
 mkdir build && cd build
-```
-```
 cmake -DODINDATA_ROOT_DIR=~/example/install -DCMAKE_INSTALL_PREFIX=~/example/install ../cpp/
+```
+```
 CMake Deprecation Warning at CMakeLists.txt:2 (cmake_minimum_required):
   Compatibility with CMake < 3.5 will be removed from a future version of
   CMake.
@@ -508,4 +506,253 @@ Installing collected packages: example-detector
 Successfully installed example-detector-0.2.dev3+g51f0cd520.d20251124
 ```
 
+### Running up the FR and FP application pair
 
+1. Take a look at the odin-data-example Frame Receiver configuration file:
+```
+cd ~/example/install/example_detector
+```
+```
+cat example-detector-fr.json
+[
+  {
+    "frame_ready_endpoint": "tcp://127.0.0.1:5001",
+    "frame_release_endpoint": "tcp://127.0.0.1:5002",
+    "decoder_type": "ExampleDetector",
+    "decoder_path": "~/example/install/lib",
+    "rx_ports": "61649",
+    "max_buffer_mem": 10000000,
+    "decoder_config": {
+      "enable_packet_logging": false,
+      "frame_timeout_ms": 1000,
+      "udp_packets_per_frame": 256,
+      "udp_packet_size": 1012
+    }
+  }
+]
+```
+
+2. Run the Frame Receiver application:
+```
+./frameReceiver
+17:23:08,912  FR.App           DEBUG - Debug level set to  3
+17:23:08,913  FR.App           DEBUG - Setting number of IO threads to 1
+17:23:08,913  FR.App           DEBUG - Setting control channel endpoint to tcp://0.0.0.0:5000
+17:23:08,913  FR.App           DEBUG - Loading JSON configuration file /home/ajg/example/install/example_detector/example-detector-fr.json
+17:23:08,913  FR.App           INFO  - frameReceiver version 1.11.0-23-g50e37dbc starting up
+17:23:08,918  FR.Controller    TRACE - FrameRecevierController constructor
+17:23:08,920  FR.Controller    DEBUG - Configuration submitted: {"params":{"ctrl_endpoint":"tcp://0.0.0.0:5000","rx_endpoint":"inproc://rx_channel"},"msg_type":"illegal","msg_val":"illegal","id":0,"timestamp":"2025-11-24T17:23:08.918642"}
+17:23:08,921  FR.Controller    DEBUG - Not unbinding channel as not bound to endpoint 
+17:23:08,921  FR.Controller    DEBUG - Binding control channel to endpoint: tcp://0.0.0.0:5000
+17:23:08,923  FR.Controller    DEBUG - Not unbinding channel as not bound to endpoint 
+17:23:08,923  FR.Controller    DEBUG - Binding receiver thread channel to endpoint: inproc://rx_channel
+17:23:08,923  FR.Controller    DEBUG - Configuring decoder with {"params":{"ctrl_endpoint":"tcp://0.0.0.0:5000","rx_endpoint":"inproc://rx_channel"},"msg_type":"illegal","msg_val":"illegal","id":0,"timestamp":"2025-11-24T17:23:08.918642"}
+17:23:08,924  FR.Controller    INFO  - RX thread not configured as frame decoder and/or buffer manager configured
+17:23:08,925  FR.Controller    DEBUG - Configuration submitted: {"params":{"frame_ready_endpoint":"tcp://127.0.0.1:5001","frame_release_endpoint":"tcp://127.0.0.1:5002","decoder_type":"ExampleDetector","decoder_path":"/home/ajg/example/install/lib","rx_ports":"61649","max_buffer_mem":10000000,"decoder_config":{"enable_packet_logging":false,"frame_timeout_ms":1000,"udp_packets_per_frame":256,"udp_packet_size":1012}},"msg_type":"cmd","msg_val":"configure","id":0,"timestamp":"2025-11-24T17:23:08.925287"}
+17:23:08,925  FR.Controller    DEBUG - Not unbinding channel as not bound to endpoint 
+17:23:08,925  FR.Controller    DEBUG - Binding frame ready notification channel to endpoint: tcp://127.0.0.1:5001
+17:23:08,926  FR.Controller    DEBUG - Not unbinding channel as not bound to endpoint 
+17:23:08,926  FR.Controller    DEBUG - Binding frame release notification channel to endpoint: tcp://127.0.0.1:5002
+17:23:08,926  FR.Controller    DEBUG - Configuring decoder with {"params":{"frame_ready_endpoint":"tcp://127.0.0.1:5001","frame_release_endpoint":"tcp://127.0.0.1:5002","decoder_type":"ExampleDetector","decoder_path":"/home/ajg/example/install/lib","rx_ports":"61649","max_buffer_mem":10000000,"decoder_config":{"enable_packet_logging":false,"frame_timeout_ms":1000,"udp_packets_per_frame":256,"udp_packet_size":1012}},"msg_type":"cmd","msg_val":"configure","id":0,"timestamp":"2025-11-24T17:23:08.925287"}
+17:23:08,927  FR.Controller    DEBUG - Built new decoder configuration message: {"params":{"enable_packet_logging":false,"frame_timeout_ms":1000,"udp_packets_per_frame":256,"udp_packet_size":1012},"msg_type":"illegal","msg_val":"illegal","id":0,"timestamp":"2025-11-24T17:23:08.913462"}
+17:23:08,927  FR.Controller    INFO  - Loading decoder plugin ExampleDetectorFrameDecoder from /home/ajg/example/install/lib/libExampleDetectorFrameDecoder.so
+17:23:08,931  FR.ExampleDetectorDecoderPlugin INFO  - ExampleDetectorDecoder version 0.0.0 loaded
+17:23:08,931  FR.Controller    INFO  - Created ExampleDetectorFrameDecoder frame decoder instance
+17:23:08,986  FR.Controller    DEBUG - Configured frame buffer manager of total size 10000000 with 151 buffers
+17:23:08,987  FR.UDPRxThread   DEBUG - FrameReceiverUDPRxThread constructor entered....
+17:23:08,987  FR.RxThread      DEBUG - Running RX thread service
+17:23:08,988  FR.RxThread      DEBUG - Connecting RX channel to endpoint inproc://rx_channel
+17:23:08,988  FR.UDPRxThread   DEBUG - Running UDP RX thread service
+17:23:08,988  FR.UDPRxThread   DEBUG - RX thread receive buffer size for port 61649 is 212992
+17:23:08,988  FR.RxThread      DEBUG - Advertising RX thread identity
+17:23:08,988  FR.RxThread      DEBUG - Requesting buffer precharge
+17:23:08,990  FR.Controller    TRACE - FrameReceiverController::run()
+17:23:08,990  FR.Controller    DEBUG - Main thread entering reactor loop
+17:23:08,990  FR.Controller    DEBUG - Got identity announcement from RX thread: 3292-e961
+17:23:08,991  FR.Controller    DEBUG - Got buffer precharge request from RX thread
+17:23:08,991  FR.RxThread      DEBUG - RX thread received acknowledgement of identity notification
+17:23:08,991  FR.RxThread      DEBUG - Precharged 151 empty buffers onto queue, length is now 151
+17:23:09,987  FR.Controller    DEBUG - Notifying downstream processes of shared buffer configuration
+17:23:09,988  FR.ExampleDetectorDecoderPlugin DEBUG - 0 frame buffers in use, 151 empty buffers available, 0 incomplete frames timed out
+17:23:10,988  FR.ExampleDetectorDecoderPlugin DEBUG - 0 frame buffers in use, 151 empty buffers available, 0 incomplete frames timed out
+```
+
+3. Take a look at the odin-data-example Frame Processor configuration file:
+```
+cd ~/example/install/example_detector
+```
+```
+cat example-detector-fp.json 
+[
+	{
+		"fr_setup": {
+			"fr_ready_cnxn": "tcp://127.0.0.1:5001",
+			"fr_release_cnxn": "tcp://127.0.0.1:5002"
+		},
+		"meta_endpoint": "tcp://*:5008"
+	},
+	{
+		"plugin": {
+			"load": {
+				"index": "hdf",
+				"name": "FileWriterPlugin",
+				"library": "~/example/install/lib/libHdf5Plugin.so"
+			}
+		}
+	},
+	{
+		"plugin": {
+			"load": {
+				"index": "example",
+				"name": "ExampleDetectorPlugin",
+				"library": "~/example/install/lib/libExampleDetectorPlugin.so"
+			}
+		}
+	},
+	{
+		"plugin": {
+			"connect": {
+				"index": "example",
+				"connection": "frame_receiver"
+			}
+		}
+	},
+	{
+		"plugin": {
+			"connect": {
+				"index": "hdf",
+				"connection": "example"
+			}
+		}
+	},
+	{
+		"hdf": {
+			"dataset": {
+				"example": {
+					"datatype": "uint8",
+					"dims": [
+						256,
+						256
+					],
+					"compression": "none"
+				}
+			},
+			"file": {
+				"path": "/tmp",
+				"first_number": 0
+			},
+			"timeout_timer_period": 3000
+		}
+	}
+]
+```
+
+4. Run the Frame Processor application:
+```
+./frameProcessor.sh 
+17:47:35,936  FP.App           DEBUG - log4cxx config file is set to /home/ajg/example/install/test_config/fp_log4cxx.xml
+17:47:35,936  FP.App           DEBUG - Debug level set to  3
+17:47:35,936  FP.App           DEBUG - Setting number of IO threads to 1
+17:47:35,936  FP.App           DEBUG - Setting control channel endpoint to tcp://0.0.0.0:5004
+17:47:35,936  FP.App           DEBUG - Loading JSON configuration file /home/ajg/example/install/example_detector/example-detector-fp.json
+17:47:35,936  FP.App           INFO  - frameProcessor version 1.11.0-23-g50e37dbc starting up
+17:47:35,937  FP.FrameProcessorController DEBUG - Running IPC thread service
+17:47:35,937  FP.FrameProcessorController DEBUG - Constructing FrameProcessorController
+17:47:35,938  FP.FrameProcessorController DEBUG - Connecting meta RX channel to endpoint: inproc://meta_rx
+17:47:35,940  FP.FrameProcessorController DEBUG - Configuration submitted: {"params":{"ctrl_endpoint":"tcp://0.0.0.0:5004"},"msg_type":"illegal","msg_val":"illegal","id":0,"timestamp":"2025-11-24T17:47:35.939173"}
+17:47:35,940  FP.FrameProcessorController DEBUG - Connecting control channel to endpoint: tcp://0.0.0.0:5004
+17:47:35,941  FP.FrameProcessorController DEBUG - Configuration submitted: {"params":{"fr_setup":{"fr_ready_cnxn":"tcp://127.0.0.1:5001","fr_release_cnxn":"tcp://127.0.0.1:5002"},"meta_endpoint":"tcp://*:5008"},"msg_type":"cmd","msg_val":"configure","id":0,"timestamp":"2025-11-24T17:47:35.941416"}
+17:47:35,941  FP.FrameProcessorController DEBUG - Connecting meta TX channel to endpoint: tcp://*:5008
+17:47:35,941  FP.FrameProcessorController DEBUG - Shared Memory Config: Publisher=tcp://127.0.0.1:5002 Subscriber=tcp://127.0.0.1:5001
+17:47:35,942  FP.SharedMemoryController TRACE - SharedMemoryController constructor.
+17:47:35,942  FP.SharedMemoryController DEBUG - Connecting RX Channel to endpoint: tcp://127.0.0.1:5001
+17:47:35,942  FP.SharedMemoryController DEBUG - Connecting TX Channel to endpoint: tcp://127.0.0.1:5002
+17:47:35,942  FP.SharedMemoryController DEBUG - Registering timer for deferred shared buffer configuration request
+17:47:35,942  FP.FrameProcessorController DEBUG - Configuration submitted: {"params":{"plugin":{"load":{"index":"hdf","name":"FileWriterPlugin","library":"/home/ajg/example/install/lib/libHdf5Plugin.so"}}},"msg_type":"cmd","msg_val":"configure","id":0,"timestamp":"2025-11-24T17:47:35.942619"}
+17:47:35,972  FP.FileWriterPlugin INFO  - FileWriterPlugin version 1.11.0-23-g50e37dbc loaded
+17:47:35,972  FP.Acquisition   TRACE - Acquisition constructor.
+17:47:35,972  FP.Acquisition   TRACE - Acquisition constructor.
+17:47:35,973  FP.FrameProcessorPlugin DEBUG - Registering blocking callback controller with hdf
+17:47:35,973  FP.FrameProcessorController INFO  - Class FileWriterPlugin loaded as index = hdf
+17:47:35,973  FP.FrameProcessorController DEBUG - Configuration submitted: {"params":{"plugin":{"load":{"index":"example","name":"ExampleDetectorPlugin","library":"/home/ajg/example/install/lib/libExampleDetectorPlugin.so"}}},"msg_type":"cmd","msg_val":"configure","id":0,"timestamp":"2025-11-24T17:47:35.973533"}
+17:47:35,975  FP.ExampleDetectorPlugin INFO  - LATRDProcessPlugin version 0.0.0 loaded
+17:47:35,975  FP.FrameProcessorController INFO  - Class ExampleDetectorPlugin loaded as index = example
+17:47:35,975  FP.FrameProcessorController DEBUG - Configuration submitted: {"params":{"plugin":{"connect":{"index":"example","connection":"frame_receiver"}}},"msg_type":"cmd","msg_val":"configure","id":0,"timestamp":"2025-11-24T17:47:35.975827"}
+17:47:35,976  FP.FrameProcessorController DEBUG - Configuration submitted: {"params":{"plugin":{"connect":{"index":"hdf","connection":"example"}}},"msg_type":"cmd","msg_val":"configure","id":0,"timestamp":"2025-11-24T17:47:35.976067"}
+17:47:35,976  FP.FrameProcessorPlugin DEBUG - Registering non-blocking callback hdf with example
+17:47:35,976  FP.FrameProcessorController DEBUG - Configuration submitted: {"params":{"hdf":{"dataset":{"example":{"datatype":"uint8","dims":[256,256],"compression":"none"}},"file":{"path":"/tmp","first_number":0},"timeout_timer_period":3000}},"msg_type":"cmd","msg_val":"configure","id":0,"timestamp":"2025-11-24T17:47:35.976278"}
+17:47:35,976  FP.FileWriterPlugin INFO  - {"params":{"dataset":{"example":{"datatype":"uint8","dims":[256,256],"compression":"none"}},"file":{"path":"/tmp","first_number":0},"timeout_timer_period":3000},"msg_type":"cmd","msg_val":"configure","id":0,"timestamp":"2025-11-24T17:47:35.976389"}
+17:47:35,976  FP.FileWriterPlugin DEBUG - Configure file name and path
+17:47:35,977  FP.FileWriterPlugin DEBUG - Next file path changed to /tmp
+17:47:35,977  FP.FileWriterPlugin DEBUG - File name first index number changed to 0
+17:47:35,977  FP.FileWriterPlugin INFO  - Checking for string name of dataset
+17:47:35,978  FP.FileWriterPlugin INFO  - Dataset name example found, creating...
+17:47:35,978  FP.FileWriterPlugin DEBUG - Configuring dataset [example]
+17:47:35,978  FP.FileWriterPlugin INFO  - Enabling compression: 1
+17:47:35,979  FP.FileWriterPlugin INFO  - Setting close file timeout to 3000
+17:47:35,979  FP.FrameProcessorController INFO  - Running frame processor
+17:47:36,943  FP.SharedMemoryController DEBUG - Requesting shared buffer configuration from frame receiver
+17:47:36,944  FP.SharedMemoryController DEBUG - RX thread called with message: {"params":{"shared_buffer_name":"OdinDataBuffer"},"msg_type":"notify","msg_val":"buffer_config","id":0,"timestamp":"2025-11-24T17:47:36.944041"}
+17:47:36,944  FP.SharedMemoryController DEBUG - Shared buffer config notification received for OdinDataBuffer
+17:47:36,944  FP.SharedMemoryController DEBUG - Initialised shared buffer manager for buffer OdinDataBuffer
+```
+
+### Running up the control server
+
+1. Activate the virtual environment
+```
+source ~/example/venv/bin/activate
+```
+2. Take look at the odin-data-example server configuration file
+```
+cd ~/example/install/example_detector
+```
+```
+more example-detector.cfg
+[server]
+debug_mode = 1
+http_port  = 8888
+http_addr  = 127.0.0.1
+static_path = ~/example/install/example_detector/static
+adapters   = detector, fr, fp, system_info
+
+[tornado]
+logging = error
+
+[adapter.detector]
+module = example_detector.example_detector_adapter.ExampleDetectorAdapter
+update_interval = 0.5
+
+[adapter.fr]
+module = odin_data.control.frame_receiver_adapter.FrameReceiverAdapter
+endpoints = 127.0.0.1:5000
+update_interval = 0.5
+
+[adapter.fp]
+module = odin_data.control.frame_processor_adapter.FrameProcessorAdapter
+endpoints = 127.0.0.1:5004
+update_interval = 0.5
+
+[adapter.system_info]
+module = odin.adapters.system_info.SystemInfoAdapter
+```
+
+3. Run the control server
+```
+odin_control --config=./example-detector.cfg
+```
+
+### Interacting with the applications using a Web browser
+
+1. Log into the workstation that is running the applications.
+2. Open a browser.
+3. Navigate to `127.0.0.1:8888`
+
+![Web UI](images/web_ui.png)
+
+## Next Steps
+
+* Acquire some frames from the simulated adapter "detector".
+* Set the frame processor to save the frames to a file.
+* Open the file using the HDFView application (or equivalent).
+* Try adjusting the debugging log level for the various applications.
