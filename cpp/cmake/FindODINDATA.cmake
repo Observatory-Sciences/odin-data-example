@@ -53,8 +53,6 @@ find_path(ODINDATA_INCLUDE_DIR
         ${PC_ODINDATA_INCLUDE_DIRS}
 )
 
-message ("\n**** Root dir: ${ODINDATA_ROOT_DIR}")
-
 find_path(FRAMERECEIVER_INCLUDE_DIR
 	NAMES
 		FrameDecoder.h

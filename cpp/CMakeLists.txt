@@ -27,27 +27,28 @@ set(CMAKE_MODULE_PATH ${ExampleDetector_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 find_package( Boost 1.41.0
 	      REQUIRED
 	      COMPONENTS program_options system filesystem unit_test_framework date_time thread)
-find_package(Log4CXX 0.10.0 REQUIRED)
-find_package(ZeroMQ 3.2.4 REQUIRED)
-find_package(OdinData REQUIRED)
+find_package(LOG4CXX 0.10.0 REQUIRED)
+find_package(ZEROMQ 3.2.4 REQUIRED)
+find_package(ODINDATA REQUIRED)
 
 
-message("Determining tristan-detector version")
-include(GetGitRevisionDescription)
-git_describe(GIT_DESC_STR)
+#message("Determining tristan-detector version")
+#include(GetGitRevisionDescription)
+#git_describe(GIT_DESC_STR)
 
-string(REGEX REPLACE "^([0-9]+)[\\.-].*" "\\1" VERSION_MAJOR "${GIT_DESC_STR}")
-string(REGEX REPLACE "^[0-9]+[\\.-]([0-9]+).*" "\\1" VERSION_MINOR "${GIT_DESC_STR}")
-string(REGEX REPLACE "^[0-9]+[\\.-][0-9]+[\\.-]([0-9]+).*" "\\1" VERSION_PATCH "${GIT_DESC_STR}")
-string(REGEX REPLACE "^[0-9]+[\\.-][0-9]+[\\.-][0-9]+-[0-9]+-(.*)" "\\1" VERSION_SHA1 "${GIT_DESC_STR}")
+#string(REGEX REPLACE "^([0-9]+)[\\.-].*" "\\1" VERSION_MAJOR "${GIT_DESC_STR}")
+#string(REGEX REPLACE "^[0-9]+[\\.-]([0-9]+).*" "\\1" VERSION_MINOR "${GIT_DESC_STR}")
+#string(REGEX REPLACE "^[0-9]+[\\.-][0-9]+[\\.-]([0-9]+).*" "\\1" VERSION_PATCH "${GIT_DESC_STR}")
+#string(REGEX REPLACE "^[0-9]+[\\.-][0-9]+[\\.-][0-9]+-[0-9]+-(.*)" "\\1" VERSION_SHA1 "${GIT_DESC_STR}")
 
-set(VERSION_SHORT "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
-set(VERSION_STR ${GIT_DESC_STR})
-message("-- Git describe version: ${GIT_DESC_STR}")
-message("-- major:${VERSION_MAJOR} minor:${VERSION_MINOR} patch:${VERSION_PATCH} sha1:${VERSION_SHA1}")
-message("-- short version: ${VERSION_SHORT}")
+#set(VERSION_SHORT "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+#set(VERSION_STR ${GIT_DESC_STR})
+#message("-- Git describe version: ${GIT_DESC_STR}")
+#message("-- major:${VERSION_MAJOR} minor:${VERSION_MINOR} patch:${VERSION_PATCH} sha1:${VERSION_SHA1}")
+#message("-- short version: ${VERSION_SHORT}")
 
-configure_file(${COMMON_DIR}/include/version.h.in "${CMAKE_BINARY_DIR}/include/version.h")
+#configure_file(${COMMON_DIR}/include/version.h.in "${CMAKE_BINARY_DIR}/include/version.h")
+
 include_directories(${CMAKE_BINARY_DIR}/include)
 # Add common/include directory to include path
 include_directories(${COMMON_DIR}/include)
