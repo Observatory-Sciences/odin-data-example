@@ -59,7 +59,8 @@ $( document ).ready(function()
 
   setInterval(update_api_version, 5000);
   setInterval(update_detector_status, 1000);
-  setInterval(update_fp_status, 1000);
+  setInterval(update_fp_status, 250);
+  setInterval(update_fr_status, 250);
   setInterval(function(){
     $('#fp-live').attr("src", "/api/0.1/live/image?"+new Date().getTime());
   },250);
@@ -328,21 +329,11 @@ function update_fp_status() {
 }
 
 function update_fr_status() {
-    $.getJSON('/api/' + odin_data.api_version + '/fr/status/buffers/empty', function (response) {
-        //alert(JSON.stringify(response));
-        odin_data.daq.setFREmptyBuffers(response['value']);
-    });
-
-    $.getJSON('/api/' + odin_data.api_version + '/fr/status/decoder/packets', function (response) {
-        odin_data.daq.setFRPackets(response['value']);
-        total_pkts = 0;
-        for (var index = 0; index < response['value'].length; index++){
-            total_pkts += parseInt(response['value'][index]);
-        }
-        $('#fr-pkts-received').html(''+total_pkts);
-    });
-    $.getJSON('/api/' + odin_data.api_version + '/fr/status/connected', function(response) {
-        odin_data.daq.setFRConnected(response['value']);
+    $.getJSON('/api/' + odin_data.api_version + '/fr/0', function(response) {
+        $('#fr-status-connected').html(led_html(''+response['0'].status.connected, 'green', 26));
+        $('#fr-get-packets').html(response['0'].status.decoder.packets);
+        $('#fr-get-dropped').html(response['0'].status.frames.dropped);
+        $('#fr-get-received').html(response['0'].status.frames.received);
     });
 }
 
