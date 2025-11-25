@@ -12,9 +12,9 @@ namespace FrameReceiver
 {
 
 ExampleDetectorDecoder::ExampleDetectorDecoder() :
-                FrameDecoderUDP(),
-                current_frame_(1),
-                packet_counter_(0),
+            FrameDecoderUDP(),
+            current_frame_(1),
+            packet_counter_(0),
         		current_frame_seen_(-1),
         		current_frame_buffer_id_(-1),
         		current_frame_buffer_(0),
@@ -24,10 +24,10 @@ ExampleDetectorDecoder::ExampleDetectorDecoder() :
         		frames_timedout_(0)
 {
   current_raw_packet_header_.reset(new uint8_t[ExampleDetector::packet_header_size]);
- //   dropped_frame_buffer_.reset(new uint8_t[LATRD::total_frame_size]);
+  dropped_frame_buffer_.reset(new uint8_t[ExampleDetector::total_frame_size]);
 
-    this->logger_ = Logger::getLogger("FR.ExampleDetectorDecoderPlugin");
-    LOG4CXX_INFO(logger_, "ExampleDetectorDecoder version " << this->get_version_long() << " loaded");
+  this->logger_ = Logger::getLogger("FR.ExampleDetectorDecoderPlugin");
+  LOG4CXX_INFO(logger_, "ExampleDetectorDecoder version " << this->get_version_long() << " loaded");
 }
 
 void ExampleDetectorDecoder::init(LoggerPtr& logger, OdinData::IpcMessage& config_msg)
@@ -41,22 +41,22 @@ ExampleDetectorDecoder::~ExampleDetectorDecoder()
 
 const size_t ExampleDetectorDecoder::get_frame_buffer_size() const
 {
-    return ExampleDetector::total_frame_size;
+  return ExampleDetector::total_frame_size;
 }
 
 const size_t ExampleDetectorDecoder::get_frame_header_size() const
 {
-    return sizeof(ExampleDetector::FrameHeader);
+  return sizeof(ExampleDetector::FrameHeader);
 }
 
 const size_t ExampleDetectorDecoder::get_packet_header_size() const
 {
-    return ExampleDetector::packet_header_size;
+  return ExampleDetector::packet_header_size;
 }
 
 void* ExampleDetectorDecoder::get_packet_header_buffer()
 {
-    return current_raw_packet_header_.get();
+  return current_raw_packet_header_.get();
 }
 
 void ExampleDetectorDecoder::log_packet(size_t bytes_received, int port, struct sockaddr_in* from_addr)
@@ -108,6 +108,9 @@ void ExampleDetectorDecoder::process_packet_header(size_t bytes_received, int po
   // Update packet_number state map in frame header
   LOG4CXX_DEBUG_LEVEL(1, logger_, "  Setting frame " << current_frame_seen_<< " buffer ID: " << current_frame_buffer_id_ << " packet header index: " << current_frame_header_->packets_received);
   current_frame_header_->packet_state[current_frame_header_->packets_received] = 1;
+
+  // Increment packet counter statistic
+  packet_counter_++;
 }
 
 void ExampleDetectorDecoder::reset_statistics(void)
