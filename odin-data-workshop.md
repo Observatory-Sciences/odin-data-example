@@ -412,6 +412,7 @@ cd ~/example
 python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
+pip install opencv-python
 ```
 
 2. Install odin-data Python module (pulls in odin-control):

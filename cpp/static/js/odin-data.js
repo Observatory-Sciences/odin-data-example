@@ -60,6 +60,9 @@ $( document ).ready(function()
   setInterval(update_api_version, 5000);
   setInterval(update_detector_status, 1000);
   setInterval(update_fp_status, 1000);
+  setInterval(function(){
+    $('#fp-live').attr("src", "/api/0.1/live/image?"+new Date().getTime());
+  },250);
 
   $(document).on("keypress", "fp-set-path", function(e){
         if(e.which == 13){

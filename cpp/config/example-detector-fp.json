@@ -26,6 +26,15 @@
 	},
 	{
 		"plugin": {
+			"load": {
+				"index": "live",
+				"name": "LiveViewPlugin",
+				"library": "${CMAKE_INSTALL_PREFIX}/lib/libLiveViewPlugin.so"
+			}
+		}
+	},
+	{
+		"plugin": {
 			"connect": {
 				"index": "example",
 				"connection": "frame_receiver"
@@ -35,9 +44,22 @@
 	{
 		"plugin": {
 			"connect": {
+				"index": "live",
+				"connection": "example"
+			}
+		}
+	},
+	{
+		"plugin": {
+			"connect": {
 				"index": "hdf",
 				"connection": "example"
 			}
+		}
+	},
+	{
+		"live": {
+			"live_view_socket_addr": "tcp://127.0.0.1:5020"
 		}
 	},
 	{
