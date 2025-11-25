@@ -535,7 +535,7 @@ cat example-detector-fr.json
 
 2. Run the Frame Receiver application:
 ```
-./frameReceiver
+./frameReceiver.sh
 17:23:08,912  FR.App           DEBUG - Debug level set to  3
 17:23:08,913  FR.App           DEBUG - Setting number of IO threads to 1
 17:23:08,913  FR.App           DEBUG - Setting control channel endpoint to tcp://0.0.0.0:5000
